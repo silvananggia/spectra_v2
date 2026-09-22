@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1a4d7a" />
+    <meta
+      name="description"
+      content="SPECTRA BRIN - Spasial analisIs Mitigasi BencanA: Solusi Informasi Kebencanaan Berbasis Ruang Angkasa. Dukungan data geospasial cepat dan akurat untuk manajemen bencana nasional."
+    />
+    <meta
+      name="keywords"
+      content="SPECTRA, BRIN, bencana, geospasial, peta bencana, manajemen bencana, data satelit, penginderaan jauh, WMS, WCS, WFS, Indonesia, kebencanaan, tanggap darurat, analisis spasial, RSO Indonesia"
+    />
+    <meta name="author" content="BRIN - Badan Riset dan Inovasi Nasional" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://spectra.brin.go.id/" />
+    <meta property="og:title" content="SPECTRA BRIN - Solusi Informasi Kebencanaan Berbasis Ruang Angkasa" />
+    <meta property="og:description" content="Dukungan data geospasial cepat dan akurat untuk manajemen bencana nasional. Akses produk peta, layanan web services (WMS, WCS, WFS), dan informasi kebencanaan terkini." />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://spectra.brin.go.id/" />
+    <meta property="twitter:title" content="SPECTRA BRIN - Solusi Informasi Kebencanaan Berbasis Ruang Angkasa" />
+    <meta property="twitter:description" content="Dukungan data geospasial cepat dan akurat untuk manajemen bencana nasional." />
+    
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <!-- Esri Leaflet CSS for ArcGIS MapServer support -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.css" />
+    <!-- Load libraries before React app starts -->
+    <script>
+      // Load libraries sequentially to ensure proper order
+      (function() {
+        const scripts = [
+          'https://unpkg.com/leaflet.vectorgrid@1.3.0/dist/Leaflet.VectorGrid.bundled.js',
+          'https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js'
+        ];
+        
+        function loadScript(src) {
+          return new Promise(function(resolve, reject) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = false; // Load sequentially
+            script.onload = function() {
+              resolve();
+            };
+            script.onerror = function() {
+              console.error('Failed to load script:', src);
+              reject(new Error('Failed to load: ' + src));
+            };
+            document.head.appendChild(script);
+          });
+        }
+        
+        // Wait for Leaflet to be available first (from react-leaflet)
+        function waitForLeaflet(callback, maxWait = 10000) {
+          const startTime = Date.now();
+          const checkInterval = setInterval(function() {
+            if (typeof window.L !== 'undefined') {
+              clearInterval(checkInterval);
+              callback();
+            } else if (Date.now() - startTime > maxWait) {
+              clearInterval(checkInterval);
+              console.error('Leaflet not found after', maxWait, 'ms');
+            }
+          }, 50);
+        }
+        
+        // Start loading after DOM is ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            waitForLeaflet(function() {
+              loadScript(scripts[0])
+                .then(function() {
+                  return loadScript(scripts[1]);
+                })
+                .then(function() {
+                  console.log('All libraries loaded successfully');
+                })
+                .catch(function(error) {
+                  console.error('Error loading libraries:', error);
+                });
+            });
+          });
+        } else {
+          waitForLeaflet(function() {
+            loadScript(scripts[0])
+              .then(function() {
+                return loadScript(scripts[1]);
+              })
+              .then(function() {
+                console.log('All libraries loaded successfully');
+              })
+              .catch(function(error) {
+                console.error('Error loading libraries:', error);
+              });
+          });
+        }
+      })();
+    </script>
+    <title>SPECTRA BRIN - Solusi Informasi Kebencanaan Berbasis Ruang Angkasa</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>

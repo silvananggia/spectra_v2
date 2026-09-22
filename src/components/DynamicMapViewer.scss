@@ -1,0 +1,236 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+
+.dynamic-map-viewer {
+  padding-top: 100px;
+  min-height: calc(100vh - 100px);
+  background: #f5f5f5;
+}
+
+.map-container-wrapper {
+  height: calc(100vh - 150px);
+  position: relative;
+}
+
+.map-list-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $text-dark-gray;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+}
+
+.maps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.map-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .map-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $text-dark-gray;
+      margin: 0;
+    }
+
+    .public-badge {
+      padding: 0.25rem 0.75rem;
+      background-color: $primary-blue;
+      color: white;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  }
+
+  .map-card-info {
+    margin-bottom: 1rem;
+
+    p {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #666;
+
+      strong {
+        color: $text-dark-gray;
+      }
+    }
+  }
+
+  .btn-view-map {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: $primary-blue;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: $primary-dark-blue;
+    }
+  }
+}
+
+.no-maps,
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.map-controls {
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .btn-back {
+    padding: 0.75rem 1.5rem;
+    background-color: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #4b5563;
+    }
+  }
+}
+
+// Mobile (< 576px)
+@include mobile-only {
+  .dynamic-map-viewer {
+    padding-top: 120px;
+    min-height: calc(100vh - 120px);
+  }
+
+  .map-container-wrapper {
+    height: calc(100vh - 170px);
+  }
+
+  .map-list-container {
+    padding: 1rem;
+
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+    }
+  }
+
+  .maps-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .map-card {
+    padding: 1rem;
+
+    .map-card-header {
+      h3 {
+        font-size: 1.1rem;
+      }
+    }
+
+    .map-card-info p {
+      font-size: 0.85rem;
+    }
+  }
+
+  .map-controls {
+    padding: 0.75rem 1rem;
+
+    .btn-back {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Tablet (576px - 767px)
+@include respond-to-range('tablet', 'laptop') {
+  .dynamic-map-viewer {
+    padding-top: 110px;
+  }
+
+  .map-list-container {
+    padding: 1.5rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+  }
+
+  .maps-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .map-card {
+    padding: 1.25rem;
+  }
+}
+
+// Laptop (768px - 1023px)
+@include respond-to-range('laptop', 'desktop') {
+  .map-list-container h1 {
+    font-size: 2.25rem;
+  }
+
+  .maps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Desktop (1024px+)
+@include desktop-up {
+  .maps-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Large Desktop (1440px+)
+@include large-desktop-up {
+  .maps-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+

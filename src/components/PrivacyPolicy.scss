@@ -1,0 +1,328 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$privacy-ink: #1a1a1a;
+$privacy-muted: #737373;
+$privacy-border: #3d3d3d;
+$privacy-divider: #e7e7e7;
+
+.privacy-page {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: $white;
+    font-family: 'Inter', sans-serif;
+    color: $privacy-ink;
+}
+
+.privacy-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 339px;
+    padding: 99px 32px 40px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.privacy-hero-pattern {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 211.611px;
+    height: 240px;
+    max-width: none;
+    object-fit: cover;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.privacy-hero-copy {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 1376px;
+    width: 100%;
+    margin: 0 auto;
+
+    h1 {
+        margin: 0;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -2px;
+        color: $privacy-ink;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $privacy-muted;
+    }
+}
+
+.privacy-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 35px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 40px 32px 64px;
+    box-sizing: border-box;
+}
+
+.privacy-article {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 1040px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.privacy-section,
+.privacy-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-margin-top: 110px;
+}
+
+.privacy-block {
+    padding-left: 36px;
+    gap: 8px;
+}
+
+.privacy-section > h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.48px;
+    color: $privacy-ink;
+}
+
+.privacy-section > p,
+.privacy-block > p,
+.privacy-detail-list p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: $privacy-ink;
+}
+
+.privacy-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+
+    img {
+        display: block;
+        max-width: none;
+    }
+}
+
+.privacy-detail-list,
+.privacy-icon-list {
+    margin: 0;
+    padding: 0 0 0 36px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+.privacy-detail-list div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+
+    strong {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        color: $privacy-ink;
+    }
+}
+
+.privacy-icon-list {
+    padding-left: 0;
+
+    span {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $privacy-ink;
+    }
+}
+
+.privacy-bullets {
+    margin: 0;
+    padding: 0 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    li {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $privacy-ink;
+    }
+}
+
+.privacy-rights {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 32px;
+    margin: 0;
+    padding: 0 0 0 36px;
+    list-style: none;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    span {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $privacy-ink;
+    }
+}
+
+.privacy-toc {
+    position: sticky;
+    top: 110px;
+    flex: 0 0 301px;
+    width: 301px;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+    padding: 8px;
+    border: 1px solid $privacy-border;
+    border-radius: 8px;
+    background: $white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+
+    a {
+        display: block;
+        padding: 12px 16px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $privacy-ink;
+        text-decoration: none;
+        border-bottom: 1px solid $privacy-divider;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+
+        &:hover,
+        &:focus-visible {
+            background: $bg-light-gray;
+        }
+
+        &.is-active {
+            font-weight: 600;
+        }
+    }
+}
+
+@include mobile-only {
+    .privacy-hero {
+        min-height: 240px;
+        padding: 120px 1rem 1.5rem;
+    }
+
+    .privacy-hero-copy h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+    }
+
+    .privacy-hero-pattern {
+        width: 140px;
+        height: 159px;
+    }
+
+    .privacy-layout {
+        flex-direction: column;
+        padding: 1.5rem 1rem 2.5rem;
+        gap: 1.5rem;
+    }
+
+    .privacy-toc {
+        order: -1;
+        position: static;
+        width: 100%;
+        flex: none;
+        max-height: none;
+    }
+
+    .privacy-block,
+    .privacy-detail-list,
+    .privacy-rights {
+        padding-left: 0;
+    }
+
+    .privacy-rights {
+        grid-template-columns: 1fr;
+    }
+}
+
+@include respond-to-range('tablet', 'laptop') {
+    .privacy-hero {
+        padding: 110px 1.5rem 2rem;
+    }
+
+    .privacy-hero-copy h1 {
+        font-size: 40px;
+    }
+
+    .privacy-layout {
+        flex-direction: column;
+        padding: 2rem 1.5rem 3rem;
+    }
+
+    .privacy-toc {
+        order: -1;
+        position: static;
+        width: 100%;
+        flex: none;
+        max-height: none;
+    }
+}
+
+@include respond-to-range('laptop', 'desktop') {
+    .privacy-layout {
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    .privacy-toc {
+        flex-basis: 280px;
+        width: 280px;
+    }
+}

@@ -1,0 +1,441 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$contact-ink: #1a1a1a;
+$contact-stripe: rgba(195, 29, 18, 0.5);
+$contact-hours: #262626;
+$contact-services-bg: #e7e7e7;
+
+.contact-page {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: $white;
+    font-family: 'Inter', sans-serif;
+    color: $contact-ink;
+}
+
+.contact-hero {
+    position: relative;
+    min-height: 628px;
+    height: auto;
+    overflow: hidden;
+    color: $white;
+}
+
+.contact-hero-media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.contact-hero-photo {
+    position: absolute;
+    width: 183.5%;
+    height: 270.03%;
+    left: -14.84%;
+    top: -23.26%;
+    max-width: none;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.contact-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(-85.42deg, rgba(41, 46, 35, 0.05) 0.93%, rgb(23, 26, 16) 98.45%);
+}
+
+.contact-hero-pattern {
+    position: absolute;
+    pointer-events: none;
+
+    &--bottom {
+        left: -45px;
+        top: 480px;
+        width: 211.611px;
+        height: 240px;
+        object-fit: cover;
+        opacity: 0.2;
+    }
+
+    &--top {
+        left: 324px;
+        top: -106px;
+        width: 240px;
+        height: 211.611px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            display: block;
+            width: 211.611px;
+            height: 240px;
+            max-width: none;
+            object-fit: cover;
+            opacity: 0.2;
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.contact-hero-copy {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 187px 32px 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-hero-intro,
+.contact-hero-details,
+.contact-hours-block {
+    max-width: 800px;
+    width: 100%;
+}
+
+.contact-hero-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    h1 {
+        margin: 0;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -2px;
+        color: $white;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $white;
+    }
+}
+
+.contact-hero-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-hero-details > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contact-label {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: $white;
+}
+
+.contact-value {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: $white;
+}
+
+.contact-emails {
+    display: flex;
+    flex-direction: column;
+
+    a {
+        color: $white;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            text-decoration: underline;
+        }
+    }
+}
+
+.contact-hours-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contact-hours {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 32px;
+    border-radius: 8px;
+    background: $contact-hours;
+    box-sizing: border-box;
+
+    p {
+        margin: 0;
+        color: $white;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+    }
+
+    .contact-hours-title {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.48px;
+    }
+}
+
+.contact-hours-note {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.4;
+    color: $white;
+}
+
+.contact-services {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    background: $contact-services-bg;
+}
+
+.contact-services h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.48px;
+    color: $contact-ink;
+}
+
+.contact-services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.contact-service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 100%;
+    padding: 16px;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    background: $white;
+    box-sizing: border-box;
+
+    h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        color: $contact-ink;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $contact-ink;
+    }
+}
+
+.contact-stripe {
+    height: 8px;
+    background: $contact-stripe;
+}
+
+.contact-office {
+    display: flex;
+    align-items: center;
+    gap: 54px;
+    padding: 32px;
+    background: $white;
+}
+
+.contact-office-map {
+    flex: 0 0 682px;
+    width: 682px;
+    height: 422px;
+    overflow: hidden;
+
+    img {
+        display: block;
+        width: 682px;
+        height: 422px;
+        max-width: none;
+        object-fit: cover;
+    }
+}
+
+.contact-office-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+    min-width: 0;
+    max-width: 640px;
+}
+
+.contact-office-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.48px;
+        color: $contact-ink;
+    }
+
+    p {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1.2;
+        color: $contact-ink;
+    }
+}
+
+.contact-office-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    img {
+        flex-shrink: 0;
+    }
+
+    > div {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: $contact-ink;
+    }
+}
+
+.contact-office-address .contact-office-building {
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+@include mobile-only {
+    .contact-hero {
+        height: auto;
+        min-height: 520px;
+    }
+
+    .contact-hero-copy {
+        padding: 140px 1rem 2rem;
+    }
+
+    .contact-hero-intro h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+    }
+
+    .contact-hero-pattern--top {
+        left: 40px;
+    }
+
+    .contact-services,
+    .contact-office {
+        padding: 1.5rem 1rem;
+    }
+
+    .contact-services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-office {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .contact-office-map,
+    .contact-office-map img {
+        width: 100%;
+        height: auto;
+        flex: none;
+    }
+
+    .contact-office-heading p {
+        font-size: 24px;
+    }
+}
+
+@include respond-to-range('tablet', 'laptop') {
+    .contact-hero-copy {
+        padding: 160px 1.5rem 2rem;
+    }
+
+    .contact-hero-intro h1 {
+        font-size: 40px;
+    }
+
+    .contact-services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .contact-office {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 24px;
+    }
+
+    .contact-office-map,
+    .contact-office-map img {
+        width: 100%;
+        height: auto;
+        flex: none;
+    }
+}
+
+@include respond-to-range('laptop', 'desktop') {
+    .contact-services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .contact-office-map {
+        flex-basis: min(100%, 520px);
+        width: min(100%, 520px);
+        height: auto;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}

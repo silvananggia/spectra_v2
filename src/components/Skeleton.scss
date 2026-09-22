@@ -1,0 +1,183 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+
+// Base Skeleton Animation
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+// Base Skeleton Styles
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #e5e5e5 0%,
+    #f0f0f0 50%,
+    #e5e5e5 100%
+  );
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 6px;
+
+  // Variants
+  &.skeleton-text {
+    height: 1em;
+    width: 100%;
+    margin: 0.5em 0;
+    border-radius: 4px;
+  }
+
+  &.skeleton-rect {
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  &.skeleton-circle {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  &.skeleton-card {
+    border-radius: 8px;
+  }
+}
+
+// Skeleton Card
+.skeleton-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .skeleton-card-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 0;
+  }
+
+  .skeleton-card-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .skeleton-card-button {
+      height: 36px;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+// Skeleton Map Card
+.skeleton-map-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  .skeleton-map-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    
+    .skeleton {
+      border-radius: 6px;
+    }
+  }
+
+  .skeleton-map-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    .skeleton {
+      border-radius: 6px;
+      height: 16px;
+    }
+  }
+
+  .skeleton-map-card-button {
+    height: 40px;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
+}
+
+// Skeleton Grid
+.skeleton-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+
+  // Default responsive grid
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+  @include mobile-only {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @include respond-to-range('tablet', 'laptop') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+// Map Loading Skeleton
+.map-loading-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1.5rem;
+  padding: 2rem;
+
+  .skeleton-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+
+  .skeleton-text {
+    width: 200px;
+    height: 20px;
+    border-radius: 10px;
+  }
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #6b7280 0%,
+      #9ca3af 50%,
+      #6b7280 100%
+    );
+    background-size: 200px 100%;
+  }
+
+  .skeleton-card,
+  .skeleton-map-card {
+    background: #374151;
+  }
+}
+

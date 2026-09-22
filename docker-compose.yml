@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  rso-brin-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rso-brin-web
+    ports:
+      - "80:80"
+    networks:
+      gisnet:
+        aliases:
+          - rso-brin-web.docker
+    restart: unless-stopped
+
+
+networks:
+  gisnet:
+    external: true

@@ -1,0 +1,95 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+
+.spectra-footer {
+    background-color: #1f2937;
+    padding: 3rem 2rem;
+    color: $white;
+
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .footer-logo-img {
+        height: 3rem;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .footer-nav {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .footer-link {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: color 0.2s ease;
+
+        &:hover,
+        &:focus-visible {
+            color: $white;
+            text-decoration: underline;
+        }
+    }
+
+    .footer-copyright {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+    }
+}
+
+// Responsive Design
+// Mobile (< 576px)
+@include mobile-only {
+    .spectra-footer {
+        padding: 2rem 1rem;
+
+        .footer-content {
+            .footer-logo {
+                margin-bottom: 0.75rem;
+            }
+
+            .footer-logo-img {
+                height: 2.5rem;
+            }
+
+            .footer-copyright {
+                font-size: 0.85rem;
+            }
+        }
+    }
+}
+
+// Tablet (576px - 767px)
+@include respond-to-range('tablet', 'laptop') {
+    .spectra-footer {
+        padding: 2.5rem 1.5rem;
+
+        .footer-content {
+            .footer-logo-img {
+                height: 2.75rem;
+            }
+        }
+    }
+}
+
+// Desktop (1024px+)
+@include desktop-up {
+    .spectra-footer {
+        padding: 3rem 2rem;
+    }
+}

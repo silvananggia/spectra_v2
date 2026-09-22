@@ -1,0 +1,674 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+
+.dynamic-map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-viewer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  // Shared layout slots — keep every floating UI in its own zone
+  --chrome-top: 76px;
+  --chrome-gap: 12px;
+  --panel-width: 340px;
+  --bottom-safe: 64px;
+  --action-h: 42px;
+  --chrome-stack-h: 52px;
+
+  .leaflet-container {
+    height: 100%;
+    width: 100%;
+  }
+
+  .leaflet-bottom.leaflet-right {
+    bottom: 8px;
+    right: 8px;
+  }
+}
+
+// Top chrome: info panel on top, action buttons below
+.map-chrome-stack {
+  position: absolute;
+  top: var(--chrome-top);
+  left: var(--chrome-gap);
+  right: var(--chrome-gap);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.map-chrome-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: var(--action-h, 42px);
+  width: 100%;
+}
+
+.map-chrome-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stac-toggle-button {
+  position: static;
+  top: auto;
+  left: auto;
+  z-index: auto;
+  background-color: var(--primary-dark-blue, #003366);
+  color: #fff;
+
+  &:hover,
+  &.active {
+    background-color: var(--secondary-cyan, #0099ff);
+  }
+}
+
+.panel-toggle-button {
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: auto;
+  background-color: var(--primary-dark-blue, #1a365d);
+  color: white;
+  margin-left: auto;
+
+  &:hover {
+    background-color: var(--primary-dark-blue-hover, #2c5282);
+    transform: none;
+  }
+}
+
+.map-loading-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.map-error,
+.map-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
+}
+
+// Basemap Selector — bottom-left, clear of zoom + status
+.basemap-selector {
+  position: absolute;
+  bottom: var(--chrome-gap, 12px);
+  left: var(--chrome-gap, 12px);
+  z-index: 1050;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  min-width: 180px;
+  max-width: 240px;
+  font-family: inherit;
+  overflow: hidden;
+
+  .basemap-header {
+    padding: 12px 16px;
+    background-color: var(--primary-dark-blue, #1a365d);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+
+    &:hover {
+      background-color: var(--primary-dark-blue-hover, #2c5282);
+    }
+  }
+
+  .basemap-options {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .basemap-option {
+    padding: 10px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.active {
+      background-color: var(--primary-blue, #3182ce);
+      color: white;
+
+      &:hover {
+        background-color: var(--primary-blue-hover, #2c5282);
+      }
+    }
+  }
+}
+
+// Panel toggle uses .map-chrome-btn + .panel-toggle-button styles above
+
+// Map Info Panel (Title and Description)
+.map-info-panel {
+  position: relative;
+  align-self: stretch;
+  max-width: 400px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-family: inherit;
+
+  .map-info-header {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+
+    .map-info-content {
+      flex: 1;
+
+      .map-info-title {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-dark-blue, #1a365d);
+        line-height: 1.3;
+      }
+
+      .map-info-description {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+      }
+    }
+
+    .map-info-hide {
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+      flex-shrink: 0;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+}
+
+// Map Info Toggle Button (when hidden)
+.map-info-toggle-hidden {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+}
+
+// Layer Control Panel — right dock, below chrome stack
+.layer-control-panel {
+  position: absolute;
+  top: calc(var(--chrome-top, 76px) + var(--chrome-stack-h, 52px) + 8px);
+  right: var(--chrome-gap, 12px);
+  bottom: calc(var(--bottom-safe, 64px) + var(--chrome-gap, 12px));
+  z-index: 1060;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  width: var(--panel-width, 340px);
+  max-height: none;
+  overflow-y: auto;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+
+  .layer-control-header {
+    padding: 12px 16px;
+    background-color: var(--primary-dark-blue, #1a365d);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .layer-control-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      button {
+        padding: 4px 8px;
+        font-size: 11px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        &.btn-close-panel {
+          padding: 6px 10px;
+          font-size: 16px;
+          line-height: 1;
+          font-weight: bold;
+          background-color: rgba(220, 38, 38, 0.3);
+
+          &:hover {
+            background-color: rgba(220, 38, 38, 0.5);
+          }
+        }
+      }
+    }
+  }
+
+  .layer-groups-list {
+    padding: 8px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .layer-group {
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .layer-group-header {
+      padding: 10px 12px;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+
+      .group-name {
+        flex: 1;
+      }
+    }
+
+    .layer-list {
+      padding: 8px;
+      background-color: white;
+    }
+
+    .layer-item {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .layer-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .layer-checkbox {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          flex: 1;
+
+          input[type="checkbox"] {
+            cursor: pointer;
+          }
+
+          span {
+            font-size: 13px;
+          }
+        }
+
+        .layer-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .btn-zoom-to-layer,
+          .btn-expand-layer {
+            background-color: transparent;
+            color: #3182ce;
+            border: 1px solid #3182ce;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+
+            &:hover {
+              background-color: rgba(49, 130, 206, 0.1);
+              color: #2c5282;
+              border-color: #2c5282;
+            }
+
+            &:active {
+              transform: scale(0.95);
+            }
+          }
+
+          .layer-type-badge {
+            background-color: #3182ce;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .layer-options {
+        margin-top: 8px;
+        padding-left: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .layer-option-section {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .layer-option-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #555;
+            padding: 4px 0;
+          }
+        }
+
+        .layer-option-toggle {
+          background: transparent;
+          border: 1px solid #ddd;
+          padding: 6px 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          color: #555;
+          text-align: left;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          &:hover {
+            background-color: #f5f5f5;
+            border-color: var(--primary-blue, #3182ce);
+          }
+        }
+
+        .layer-controls {
+          padding: 8px;
+          background-color: #f8f9fa;
+          border-radius: 4px;
+          border: 1px solid #e0e0e0;
+          margin-top: 4px;
+
+          label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            color: #666;
+
+            input[type="range"] {
+              width: 100%;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .layer-legend {
+        margin-top: 4px;
+        padding: 8px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0;
+
+        .legend-title {
+          font-size: 11px;
+          font-weight: 600;
+          color: #555;
+          margin-bottom: 6px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .legend-swatch {
+            flex-shrink: 0;
+            border-radius: 2px;
+          }
+
+          .legend-label {
+            font-size: 12px;
+            color: #666;
+          }
+        }
+
+        .legend-image-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          max-width: 100%;
+          overflow: hidden;
+
+          .legend-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@include mobile-only {
+  .map-viewer {
+    --chrome-top: 64px;
+    --panel-width: 100%;
+    --bottom-safe: 56px;
+  }
+
+  .map-chrome-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .map-info-panel {
+    max-width: none;
+
+    .map-info-header {
+      padding: 10px 12px;
+
+      .map-info-content {
+        .map-info-title {
+          font-size: 16px;
+        }
+
+        .map-info-description {
+          font-size: 12px;
+        }
+      }
+
+      .map-info-hide {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .map-info-toggle-hidden {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  // Layers as full-width sheet under chrome (only one panel open on mobile)
+  .layer-control-panel {
+    left: var(--chrome-gap);
+    right: var(--chrome-gap);
+    width: auto;
+    bottom: calc(var(--bottom-safe) + var(--chrome-gap));
+    z-index: 1070;
+
+    .layer-control-header {
+      padding: 10px 12px;
+
+      h3 {
+        font-size: 14px;
+      }
+
+      .layer-control-actions button {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+    }
+  }
+
+  .basemap-selector {
+    min-width: auto;
+    max-width: 160px;
+
+    .basemap-header {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .basemap-option {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+  }
+
+  // When STAC bottom sheet is open, tuck basemap to the right edge
+  .map-viewer.stac-open .basemap-selector {
+    left: auto;
+    right: var(--chrome-gap);
+  }
+}
+
+@include respond-to-range('tablet', 'desktop') {
+  .map-viewer {
+    --panel-width: 300px;
+  }
+}
+
+@include desktop-up {
+  .map-viewer {
+    --chrome-top: 76px;
+    --panel-width: 340px;
+  }
+}
+
+// Leaflet zoom control styling (bottom right)
+.leaflet-bottom.leaflet-right {
+  .leaflet-control-zoom {
+    margin: 10px 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  }
+}
+

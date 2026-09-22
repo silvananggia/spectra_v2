@@ -1,0 +1,820 @@
+@import '../assets/scss/variables';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+$map-dash-rail: 92px;
+$map-dash-panel: 392px;
+$map-dash-accent: $primary-red;
+$map-dash-ink: #2c3e50;
+$map-dash-muted: #7b8794;
+$map-dash-green: #2e9b4a;
+$map-dash-red: #d64545;
+
+.map-dash-page {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+    background: #0b1d2e;
+
+    .spectra-header {
+        position: relative;
+        z-index: 20;
+        flex-shrink: 0;
+        width: 100%;
+        background: $primary-dark-blue;
+        backdrop-filter: none;
+        box-sizing: border-box;
+    }
+}
+
+.map-dash {
+    position: relative;
+    isolation: isolate;
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    overflow: hidden;
+    background: #0b1d2e;
+    color: $map-dash-ink;
+    font-family: 'Inter', sans-serif;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.map-dash-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+
+    .map-dash-ol {
+        width: 100%;
+        height: 100%;
+
+        .ol-attribution {
+            left: calc(#{$map-dash-rail} + 12px);
+            top: auto;
+            right: auto;
+            width: auto;
+            height: auto;
+        }
+    }
+}
+
+.map-dash--panel .map-dash-bg .map-dash-ol .ol-attribution {
+    left: calc(#{$map-dash-rail} + #{$map-dash-panel} + 16px);
+    top: auto;
+    right: auto;
+    width: auto;
+    height: auto;
+}
+
+.map-dash--timeline .map-dash-bg .map-dash-ol .ol-attribution,
+.map-dash--timeline.map-dash--panel .map-dash-bg .map-dash-ol .ol-attribution {
+    bottom: 132px;
+}
+
+.map-dash-rail {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: $map-dash-rail;
+    height: 100%;
+    padding: 10px 0;
+    background: $white;
+    box-shadow: 1px 0 0 #ececec;
+    box-sizing: border-box;
+}
+
+.map-dash-rail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 6px 6px;
+    border: 0;
+    background: transparent;
+    color: #5d6d7e;
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1.15;
+    text-align: center;
+    cursor: pointer;
+
+    svg {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+
+    span {
+        display: block;
+        max-width: 76px;
+    }
+
+    &.is-active {
+        color: $map-dash-accent;
+    }
+
+    &:hover {
+        background: #fafafa;
+    }
+}
+
+.map-dash-panel {
+    position: absolute;
+    top: 0;
+    left: $map-dash-rail;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: $map-dash-panel;
+    height: 100%;
+    padding: 18px 20px 24px;
+    background: $white;
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.map-dash-event-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.map-dash-event-code {
+    color: $map-dash-muted;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.map-dash-event-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #c8cdd2;
+    color: $white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    &.is-active {
+        background: #2e9b4a;
+    }
+}
+
+.map-dash-event h1 {
+    margin: 0 0 18px;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1b2430;
+}
+
+.map-dash-products h2,
+.map-dash-placeholder h2,
+.map-dash-info h2,
+.map-dash-timeseries h2,
+.map-dash-stats h2 {
+    margin: 0 0 14px;
+    color: $map-dash-muted;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.map-dash-stats h2 {
+    display: inline-block;
+    padding-bottom: 6px;
+    border-bottom: 2px solid $map-dash-accent;
+    color: $map-dash-ink;
+}
+
+.map-dash-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin: 8px 0 28px;
+    padding: 16px 18px;
+    border: 2px solid $map-dash-accent;
+    border-radius: 8px;
+    background: $white;
+    color: $map-dash-accent;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    svg {
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+    }
+
+    span {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    strong {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    small {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    &:hover {
+        background: #fef2f2;
+    }
+}
+
+.map-dash-stats-label {
+    margin: 0 0 6px;
+    color: $map-dash-ink;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.map-dash-stats-hero {
+    margin: 0 0 28px;
+    color: $map-dash-ink;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+
+    span {
+        font-size: 22px;
+        font-weight: 600;
+    }
+}
+
+.map-dash-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 16px;
+
+    article {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: $map-dash-accent;
+    }
+
+    svg {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+    }
+
+    strong {
+        display: block;
+        color: $map-dash-ink;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+    }
+
+    span {
+        display: block;
+        margin-top: 2px;
+        color: $map-dash-muted;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.3;
+    }
+}
+
+.map-dash-info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    h3 {
+        margin: 0 0 8px;
+        color: $map-dash-ink;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    dl {
+        margin: 0;
+    }
+
+    div {
+        display: grid;
+        grid-template-columns: 118px 1fr;
+        gap: 8px;
+        margin: 0 0 8px;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    dt {
+        margin: 0;
+        color: $map-dash-muted;
+        font-weight: 600;
+    }
+
+    dd {
+        margin: 0;
+        color: $map-dash-ink;
+        word-break: break-word;
+    }
+}
+
+.map-dash-timeseries {
+    p {
+        margin: 0 0 12px;
+        color: #5d6d7e;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+}
+
+.map-dash-sat {
+    margin: 2px 0;
+}
+
+.map-dash-sat-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.map-dash-sat-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    small {
+        color: $map-dash-muted;
+        font-size: 11px;
+        font-weight: 500;
+    }
+}
+
+.map-dash-timeline {
+    position: absolute;
+    left: calc(#{$map-dash-rail} + 12px);
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
+    box-sizing: border-box;
+}
+
+.map-dash--panel .map-dash-timeline {
+    left: calc(#{$map-dash-rail} + min(#{$map-dash-panel}, calc(100% - #{$map-dash-rail})) + 16px);
+}
+
+.map-dash-timeline-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.map-dash-timeline-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: $white;
+    color: $map-dash-ink;
+    cursor: pointer;
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: $map-dash-accent;
+        color: $map-dash-accent;
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+}
+
+.map-dash-timeline-current {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    flex: 1;
+
+    strong {
+        color: $map-dash-ink;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    small {
+        overflow: hidden;
+        color: $map-dash-muted;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+.map-dash-timeline-dates {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+}
+
+.map-dash-timeline-empty {
+    margin: 0;
+    color: $map-dash-muted;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.map-dash-timeline-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 46px;
+    padding: 6px 4px 4px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: $map-dash-muted;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+
+    &:hover {
+        background: #f3f4f6;
+        color: $map-dash-ink;
+    }
+
+    &.is-active {
+        background: #fef2f2;
+        color: $map-dash-accent;
+    }
+}
+
+.map-dash-timeline-dots {
+    display: flex;
+    gap: 3px;
+    min-height: 7px;
+
+    i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        opacity: 0.35;
+    }
+
+    i.is-on {
+        opacity: 1;
+    }
+}
+
+.map-dash-timeline-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: $map-dash-muted;
+    font-size: 11px;
+    font-weight: 600;
+
+    li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    li.is-off {
+        opacity: 0.4;
+    }
+
+    i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+}
+
+.map-dash-placeholder p {
+    margin: 0;
+    color: #5d6d7e;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.map-dash-tree,
+.map-dash-products-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.map-dash-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        cursor: pointer;
+    }
+
+    span,
+    .map-dash-area-name {
+        color: $map-dash-ink;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.35;
+    }
+}
+
+.map-dash-tree-row--all {
+    margin-bottom: 8px;
+}
+
+.map-dash-tree-row--area label {
+    flex: 1;
+    min-width: 0;
+}
+
+.map-dash-tree-row--product {
+    align-items: flex-start;
+
+    span {
+        font-weight: 600;
+    }
+}
+
+.map-dash-tree-row input[type='checkbox'] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    flex-shrink: 0;
+    border: 1.5px solid #c5ccd3;
+    border-radius: 3px;
+    background: $white;
+    cursor: pointer;
+
+    &:checked {
+        border-color: $map-dash-accent;
+        background: $map-dash-accent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.2' d='M3.2 8.2 6.4 11.4 12.8 4.6'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
+    }
+
+    &:indeterminate {
+        border-color: $map-dash-accent;
+        background: $map-dash-accent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.2' d='M3.2 8h9.6'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
+    }
+}
+
+.map-dash-toggle,
+.map-dash-area-name {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.map-dash-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    color: #8a94a0;
+}
+
+.map-dash-chevron {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.16s ease;
+
+    &.is-open {
+        transform: rotate(90deg);
+    }
+}
+
+.map-dash-area {
+    margin: 2px 0;
+}
+
+.map-dash-products-list {
+    padding: 2px 0 8px 24px;
+}
+
+.map-dash-product {
+    margin: 0 0 8px;
+}
+
+.map-dash-product-tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #6b7280;
+        cursor: pointer;
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        &:hover {
+            color: $map-dash-ink;
+        }
+    }
+}
+
+.map-dash-product-status {
+    margin: 2px 0 0 24px;
+    font-size: 12px;
+    line-height: 1.4;
+
+    &.is-done {
+        color: $map-dash-green;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: $map-dash-green;
+            box-shadow: inset 0 0 0 2px $white;
+            vertical-align: -1px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='6' fill='%232e9b4a'/%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.6' d='M3.2 6.2 5.1 8.1 8.8 4'/%3E%3C/svg%3E");
+            background-size: cover;
+        }
+    }
+
+    &.is-missing {
+        color: $map-dash-red;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 6px;
+            vertical-align: -1px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='6' fill='%23d64545'/%3E%3Cpath stroke='%23fff' stroke-width='1.6' d='M4 4l4 4M8 4l-4 4'/%3E%3C/svg%3E") center / cover no-repeat;
+        }
+    }
+}
+
+.map-dash-details {
+    margin: 8px 0 4px 24px;
+}
+
+.map-dash-details-toggle {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: $map-dash-accent;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.map-dash-details dl {
+    margin: 10px 0 0;
+}
+
+.map-dash-details div {
+    display: grid;
+    grid-template-columns: 118px 1fr;
+    gap: 8px;
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.map-dash-details dt {
+    margin: 0;
+    color: $map-dash-ink;
+    font-weight: 700;
+}
+
+.map-dash-details dd {
+    margin: 0;
+    color: $map-dash-ink;
+}
+
+.map-dash-why {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: $map-dash-accent;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.map-dash-map-close {
+    position: absolute;
+    top: 12px;
+    left: calc(#{$map-dash-rail} + #{$map-dash-panel} + 12px);
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 8px;
+    background: $white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+    color: #6b7280;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@media (max-width: 860px) {
+    .map-dash-panel {
+        width: min(392px, calc(100% - #{$map-dash-rail}));
+    }
+
+    .map-dash-map-close {
+        left: auto;
+        right: 12px;
+    }
+}

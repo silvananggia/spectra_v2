@@ -1,0 +1,359 @@
+@import '../assets/scss/variables';
+@import '../assets/scss/mixins';
+
+.spectra-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    width: 100%;
+
+    .header-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        flex-shrink: 0; // Prevent logo from shrinking
+
+        .logo-icon {
+            height: 2rem;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: $white;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+    }
+
+    .header-top {
+        display: none; // Hidden on desktop, shown on mobile
+    }
+
+    .hamburger-button {
+        display: none; // Hidden on desktop
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        z-index: 1001;
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            width: 24px;
+            height: 18px;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+
+            span {
+                display: block;
+                height: 3px;
+                width: 100%;
+                background-color: $white;
+                border-radius: 3px;
+                transition: all 0.3s ease;
+            }
+
+            &.active {
+                span:nth-child(1) {
+                    transform: rotate(45deg) translate(8px, 8px);
+                }
+
+                span:nth-child(2) {
+                    opacity: 0;
+                }
+
+                span:nth-child(3) {
+                    transform: rotate(-45deg) translate(8px, -8px);
+                }
+            }
+        }
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem; // Increased gap for better spacing
+        flex-wrap: nowrap; // Prevent wrapping
+    }
+
+    .nav {
+        display: flex;
+        gap: 1.5rem; // Reduced gap to prevent overflow
+        align-items: center;
+        flex-wrap: nowrap; // Prevent wrapping
+        white-space: nowrap; // Prevent text wrapping
+
+        .nav-link {
+            color: $white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap; // Prevent text wrapping
+            flex-shrink: 0; // Prevent shrinking
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.15);
+                color: $white;
+                transform: translateY(-2px);
+            }
+
+            &.active {
+                background-color: rgba(255, 255, 255, 0.25);
+                color: $white;
+                font-weight: 600;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 60%;
+                    height: 3px;
+                    background-color: $primary-red;
+                    border-radius: 2px;
+                }
+            }
+        }
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-shrink: 0; // Prevent shrinking
+        white-space: nowrap; // Prevent text wrapping
+
+        .btn-login {
+            background-color: $primary-red;
+            color: $white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap; // Prevent text wrapping
+            flex-shrink: 0; // Prevent shrinking
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                background-color: darken($primary-red, 10%);
+            }
+        }
+
+        .btn-lang {
+            background: rgba(255, 255, 255, 0.2);
+            color: $white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap; // Prevent text wrapping
+            flex-shrink: 0; // Prevent shrinking
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .lang-active {
+                font-weight: 600;
+            }
+
+            .lang-inactive {
+                font-weight: 400;
+                opacity: 0.8;
+            }
+        }
+    }
+
+    // Mobile (< 576px)
+    @include mobile-only {
+        padding: 0.75rem 1rem;
+
+        .header-container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .logo {
+            display: none; // Hide desktop logo on mobile
+        }
+
+        .header-top {
+            width: 100%;
+            display: flex; // Show header-top on mobile
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hamburger-button {
+            display: block;
+        }
+
+        .header-top .logo {
+            display: flex; // Show logo inside header-top on mobile
+
+            .logo-icon {
+                height: 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.1rem;
+            }
+        }
+
+        .header-right {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+            padding: 0;
+
+            &.mobile-open {
+                max-height: 600px;
+                opacity: 1;
+                padding-top: 1rem;
+                gap: 1rem;
+            }
+        }
+
+        .nav {
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+
+            .nav-link {
+                font-size: 0.9rem;
+                padding: 0.75rem 1rem;
+                width: 100%;
+                border-radius: 6px;
+                text-align: left;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.15);
+                }
+
+                &.active {
+                    background-color: rgba(255, 255, 255, 0.25);
+                }
+            }
+        }
+
+        .header-actions {
+            width: 100%;
+            justify-content: space-between;
+            flex-direction: row;
+            gap: 0.75rem;
+
+            .btn-login {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                flex: 1;
+            }
+
+            .btn-lang {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    // Tablet (576px - 767px)
+    @include respond-to-range('tablet', 'laptop') {
+        padding: 1rem 1.5rem;
+
+        .header-container {
+            gap: 1.5rem;
+        }
+
+        .nav {
+            gap: 1rem;
+
+            .nav-link {
+                font-size: 0.9rem;
+                padding: 0.45rem 0.9rem;
+            }
+        }
+
+        .header-actions {
+            gap: 0.75rem;
+
+            .btn-login {
+                padding: 0.5rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    // Laptop (768px - 1023px)
+    @include respond-to-range('laptop', 'desktop') {
+        padding: 1rem 1.75rem;
+
+        .header-right {
+            gap: 2rem;
+        }
+
+        .nav {
+            gap: 1.5rem;
+        }
+    }
+
+    // Desktop (1024px+)
+    @include desktop-up {
+        .header-right {
+            gap: 3rem; // More spacing on large screens
+        }
+
+        .nav {
+            gap: 2rem;
+        }
+
+        .header-actions {
+            gap: 1.25rem;
+        }
+    }
+}

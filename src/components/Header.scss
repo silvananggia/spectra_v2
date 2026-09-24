@@ -12,6 +12,13 @@
     padding: 1rem 2rem;
     width: 100%;
 
+    &.is-app {
+        position: relative;
+        background: $primary-dark-blue;
+        backdrop-filter: none;
+        flex-shrink: 0;
+    }
+
     .header-container {
         max-width: 1400px;
         margin: 0 auto;
@@ -151,25 +158,40 @@
         flex-shrink: 0; // Prevent shrinking
         white-space: nowrap; // Prevent text wrapping
 
-        .btn-login {
-            background-color: $primary-red;
+        .btn-login,
+        .btn-publish {
             color: $white;
-            border: none;
             padding: 0.5rem 1.5rem;
             border-radius: 4px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, border-color 0.3s;
             white-space: nowrap; // Prevent text wrapping
             flex-shrink: 0; // Prevent shrinking
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .btn-login {
+            background-color: $primary-red;
+            border: none;
 
             &:hover {
                 background-color: darken($primary-red, 10%);
+            }
+        }
+
+        .btn-publish {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+
+            &:hover,
+            &.active {
+                background-color: $primary-red;
+                border-color: $primary-red;
             }
         }
 
@@ -289,7 +311,8 @@
             flex-direction: row;
             gap: 0.75rem;
 
-            .btn-login {
+            .btn-login,
+            .btn-publish {
                 padding: 0.6rem 1rem;
                 font-size: 0.85rem;
                 flex: 1;

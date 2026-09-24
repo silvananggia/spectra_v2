@@ -3,18 +3,27 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleLanguage } from '../redux/slices/language';
 import { logout } from '../redux/slices/auth';
+import { ROLE_CONTRIBUTOR, ROLE_STAKEHOLDER } from '../utils/authSession';
 import { useTranslation } from '../utils/i18n';
 import '../assets/style/ColorPalette.css';
 import logoSpectra from '../assets/images/logo/logo-spectra.png';
+import Publish from './Publish';
 import './Header.scss';
 
-const Header = () => {
+const Header = ({ variant = 'overlay' }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { t, currentLanguage } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const [isPublishOpen, setIsPublishOpen] = useState(false);
+    const { isAuthenticated, roles } = useSelector((state) => state.auth);
+    const isStakeholder = isAuthenticated && roles?.[0] === ROLE_STAKEHOLDER;
+    const isContributor = isAuthenticated && roles?.[0] === ROLE_CONTRIBUTOR;
+    const homePath = isStakeholder || isContributor ? '/dashboard' : '/';
+    const isMapDashboard = location.pathname === '/dashboard/map';
+    const showPublish = isStakeholder && isMapDashboard;
+    const isAppHeader = variant === 'app';
 
     const handleLanguageToggle = () => {
         dispatch(toggleLanguage());
@@ -37,10 +46,11 @@ const Header = () => {
     // Close mobile menu when route changes
     useEffect(() => {
         closeMobileMenu();
+        setIsPublishOpen(false);
     }, [location.pathname]);
 
     return (
-        <header className="spectra-header">
+        <header className={`spectra-header${isAppHeader ? ' is-app' : ''}`}>
             <div className="header-container">
                 <div className="logo">
                     <Link to="/" className="logo-link">
@@ -67,11 +77,24 @@ const Header = () => {
                 </div>
                 <div className={`header-right ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                     <nav className="nav">
+                        <NavLink to={homePath} className="nav-link" end onClick={closeMobileMenu}>{t('header.home')}</NavLink>
                         <NavLink to="/howto" className="nav-link" onClick={closeMobileMenu}>{t('header.services')}</NavLink>
                         <NavLink to="/profile" className="nav-link" onClick={closeMobileMenu}>{t('header.about')}</NavLink>
                         <NavLink to="/contact" className="nav-link" onClick={closeMobileMenu}>{t('header.contact')}</NavLink>
                     </nav>
                     <div className="header-actions">
+                        {showPublish ? (
+                            <button
+                                type="button"
+                                className={`btn-publish${isPublishOpen ? ' active' : ''}`}
+                                onClick={() => {
+                                    closeMobileMenu();
+                                    setIsPublishOpen(true);
+                                }}
+                            >
+                                {t('header.publish')}
+                            </button>
+                        ) : null}
                         {isAuthenticated ? (
                             <button type="button" className="btn-login" onClick={handleLogout}>
                                 {t('header.logout')}
@@ -89,6 +112,9 @@ const Header = () => {
                     </div>
                 </div>
             </div>
+            {showPublish ? (
+                <Publish isOpen={isPublishOpen} onClose={() => setIsPublishOpen(false)} />
+            ) : null}
         </header>
     );
 };

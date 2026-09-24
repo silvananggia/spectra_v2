@@ -4,13 +4,13 @@ import { useTranslation } from '../utils/i18n';
 import DashboardLayout from './DashboardLayout';
 import {
     ACTIVATORS,
-    EMPTY_FORM,
     NEEDED_INFO,
     REGION_TREE,
     applyActivator,
     buildSessionId,
     loadDraft,
     loadSession,
+    normalizeActivationForm,
     resolveRegionExtent,
     saveDraft,
     saveSession,
@@ -77,7 +77,7 @@ const Activation = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [step, setStep] = useState(0);
-    const [form, setForm] = useState(() => loadDraft() || loadSession() || EMPTY_FORM);
+    const [form, setForm] = useState(() => normalizeActivationForm(loadDraft() || loadSession()));
     const [modal, setModal] = useState(null);
     const [aoiTool, setAoiTool] = useState('pan');
     const [draftNotice, setDraftNotice] = useState(false);
@@ -118,7 +118,7 @@ const Activation = () => {
     const stepReady = [identityReady, disasterReady, areaReady, identityReady && disasterReady && areaReady][step];
 
     const selectedNeeded = useMemo(
-        () => NEEDED_INFO.filter((item) => form.needed.includes(item.id)),
+        () => NEEDED_INFO.filter((item) => (form.needed || []).includes(item.id)),
         [form.needed]
     );
 
@@ -195,9 +195,9 @@ const Activation = () => {
     const toggleNeeded = (id) => {
         setForm((prev) => ({
             ...prev,
-            needed: prev.needed.includes(id)
+            needed: (prev.needed || []).includes(id)
                 ? prev.needed.filter((item) => item !== id)
-                : [...prev.needed, id],
+                : [...(prev.needed || []), id],
         }));
     };
 
@@ -387,7 +387,7 @@ const Activation = () => {
                                     <label key={item.id} className="act-check">
                                         <input
                                             type="checkbox"
-                                            checked={form.needed.includes(item.id)}
+                                            checked={(form.needed || []).includes(item.id)}
                                             onChange={() => toggleNeeded(item.id)}
                                         />
                                         <span>{t(item.labelKey)}</span>

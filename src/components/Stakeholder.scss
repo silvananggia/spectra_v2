@@ -4,8 +4,10 @@
 
 .stakeholder-page {
     width: 100%;
-    min-height: 100vh;
-    background: $white;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: 'Inter', sans-serif;
 }
 
 .stakeholder-page .container {
@@ -84,23 +86,23 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: $primary-red;
+    background: #262626;
     color: $white;
     text-decoration: none;
     border: none;
-    border-radius: 6px;
-    padding: 0.75rem 1.4rem;
+    border-radius: 24px;
+    padding: 0.7rem 1.2rem;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
 .btn-primary-cta:hover,
 .btn-activate:hover,
 .btn-submit:hover,
 .card-cta:hover {
-    background: darken($primary-red, 8%);
+    background: #1a1a1a;
 }
 
 .btn-secondary-cta,
@@ -175,9 +177,9 @@
 }
 
 .stakeholder-activity {
-    scroll-margin-top: 120px;
-    padding: 5rem 0 6rem;
-    background: $bg-light-gray;
+    scroll-margin-top: 0;
+    padding: 0;
+    background: transparent;
 }
 
 .activity-header {
@@ -240,8 +242,8 @@
     }
 
     &.is-active {
-        background: #374151;
-        border-color: #374151;
+        background: #c31d12;
+        border-color: #c31d12;
         color: $white;
 
         .tab-count {
@@ -262,9 +264,9 @@
     flex-direction: column;
     overflow: hidden;
     background: $white;
-    border: 1px solid transparent;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    box-shadow: none;
 }
 
 .card-media {
@@ -417,15 +419,6 @@
     .card-type {
         color: #c2410c;
     }
-
-    .card-cta:not(.card-cta-secondary) {
-        background: #ea580c;
-        color: $white;
-
-        &:hover {
-            background: darken(#ea580c, 8%);
-        }
-    }
 }
 
 .activity-card.theme-drought {
@@ -442,14 +435,6 @@
 
     .card-type {
         color: #b45309;
-    }
-
-    .card-cta:not(.card-cta-secondary) {
-        background: #d97706;
-
-        &:hover {
-            background: darken(#d97706, 8%);
-        }
     }
 }
 
@@ -468,14 +453,6 @@
     .card-type {
         color: #1d4ed8;
     }
-
-    .card-cta:not(.card-cta-secondary) {
-        background: #2563eb;
-
-        &:hover {
-            background: darken(#2563eb, 8%);
-        }
-    }
 }
 
 .activity-card.theme-landslide {
@@ -492,14 +469,6 @@
 
     .card-type {
         color: #7c2d12;
-    }
-
-    .card-cta:not(.card-cta-secondary) {
-        background: #92400e;
-
-        &:hover {
-            background: darken(#92400e, 8%);
-        }
     }
 }
 

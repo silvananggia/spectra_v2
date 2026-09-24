@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from '../utils/i18n';
 import { logout } from '../redux/slices/auth';
+import { ROLE_STAKEHOLDER } from '../utils/authSession';
 import { loadSession } from '../utils/activationSession';
 import logoSpectra from '../assets/images/dashboard/logo-spectra.png';
 import avatarUser from '../assets/images/dashboard/avatar.png';
 import iconHome from '../assets/images/dashboard/icon-home.svg';
 import iconDashboard from '../assets/images/dashboard/icon-dashboard.svg';
 import iconSession from '../assets/images/dashboard/icon-session.svg';
+import iconAlert from '../assets/images/dashboard/icon-alert.svg';
 import iconLaporan from '../assets/images/dashboard/icon-laporan.svg';
 import iconProduk from '../assets/images/dashboard/icon-produk.svg';
 import iconChevron from '../assets/images/dashboard/icon-chevron.svg';
@@ -28,8 +30,12 @@ const DashboardLayout = ({ activeNav = 'dashboard', children }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user, roles } = useSelector((state) => state.auth);
+    const isStakeholder = roles?.[0] === ROLE_STAKEHOLDER;
     const hasSession = Boolean(loadSession());
     const sessionPath = hasSession ? '/dashboard/session' : '/dashboard/activation';
+    const displayName = user?.username || 'BNPB1234';
+    const roleLabel = isStakeholder ? t('dashboard.roleStakeholder') : t('dashboard.roleActivator');
 
     const handleLogout = () => {
         dispatch(logout());
@@ -38,6 +44,7 @@ const DashboardLayout = ({ activeNav = 'dashboard', children }) => {
 
     return (
         <div className="dashboard-page">
+            <div className="dashboard-shell">
             <aside className="dash-sidebar">
                 <div className="dash-sidebar-brand">
                     <Link to="/" className="dash-logo" aria-label="SPECTRA">
@@ -55,6 +62,17 @@ const DashboardLayout = ({ activeNav = 'dashboard', children }) => {
                         <div className="dash-nav-divider" />
 
                         <nav className="dash-nav-group" aria-label={t('dashboard.navLabel')}>
+                            {isStakeholder ? (
+                                <NavLink
+                                    to="/stakeholder"
+                                    className={({ isActive }) =>
+                                        `dash-nav-item${isActive || activeNav === 'stakeholder' ? ' dash-nav-item--active' : ''}`
+                                    }
+                                >
+                                    <IconBox src={iconAlert} box={24} leaf={24} />
+                                    <span className="dash-nav-label">{t('dashboard.navEvents')}</span>
+                                </NavLink>
+                            ) : null}
                             <NavLink
                                 to="/dashboard"
                                 end
@@ -114,8 +132,8 @@ const DashboardLayout = ({ activeNav = 'dashboard', children }) => {
                                 <img src={avatarUser} alt="" width={40} height={40} />
                             </span>
                             <div className="dash-user-meta">
-                                <p>BNPB1234</p>
-                                <p>{t('dashboard.roleActivator')}</p>
+                                <p>{displayName}</p>
+                                <p>{roleLabel}</p>
                             </div>
                         </div>
                     </div>
@@ -123,6 +141,7 @@ const DashboardLayout = ({ activeNav = 'dashboard', children }) => {
             </aside>
 
             <main className="dash-main">{children}</main>
+            </div>
         </div>
     );
 };

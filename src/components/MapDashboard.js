@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from '../utils/i18n';
 import Header from './Header';
 import OpenLayersMap from './OpenLayersMap';
-import { INDONESIA_EXTENT, NEEDED_INFO, loadDraft, loadSession, resolveRegionExtent } from '../utils/activationSession';
+import { INDONESIA_EXTENT, NEEDED_INFO, ensureLiveSession, resolveRegionExtent } from '../utils/activationSession';
+import { ANALYSIS_AREAS, SATELLITE_META, buildTimeSeries } from '../utils/mapDashboardCatalog';
 import './MapDashboard.scss';
 
 const RAIL_ITEMS = [
@@ -13,78 +14,6 @@ const RAIL_ITEMS = [
     { id: 'stats', labelKey: 'mapDashboard.navStats' },
     { id: 'reporting', labelKey: 'mapDashboard.navReporting' },
     { id: 'openapi', labelKey: 'mapDashboard.navOpenApi' },
-];
-
-const INITIAL_AREAS = [
-    { id: 'area-01', nameKey: 'mapDashboard.areas.north', expanded: false, products: [] },
-    { id: 'area-02', nameKey: 'mapDashboard.areas.west', expanded: false, products: [] },
-    {
-        id: 'area-03',
-        nameKey: 'mapDashboard.areas.east',
-        expanded: true,
-        products: [
-            {
-                id: 'p-east-monitor',
-                nameKey: 'mapDashboard.productMonitor',
-                checked: true,
-                status: 'completed',
-                completedAt: '27/09/2026, 04:47 (UTC)',
-                downloadable: true,
-            },
-            {
-                id: 'p-east-grading',
-                nameKey: 'mapDashboard.productGrading',
-                checked: true,
-                status: 'completed',
-                completedAt: '27/09/2026, 04:22 (UTC)',
-                downloadable: true,
-            },
-        ],
-    },
-    {
-        id: 'area-04',
-        nameKey: 'mapDashboard.areas.south',
-        expanded: true,
-        products: [
-            {
-                id: 'p-south-grading',
-                nameKey: 'mapDashboard.productGrading',
-                checked: true,
-                status: 'notProduced',
-                downloadable: false,
-                detailsOpen: true,
-                details: {
-                    sensor: 'optical/VHR1',
-                    acquisitionKey: 'mapDashboard.waitingConfirmation',
-                    reasonKey: 'mapDashboard.cloudReason',
-                },
-            },
-        ],
-    },
-    {
-        id: 'area-05',
-        nameKey: 'mapDashboard.areas.center',
-        expanded: true,
-        products: [
-            {
-                id: 'p-center-monitor',
-                nameKey: 'mapDashboard.productMonitor',
-                checked: true,
-                status: 'completed',
-                completedAt: '05/09/2026, 06:32 (UTC)',
-                downloadable: true,
-            },
-            {
-                id: 'p-center-grading',
-                nameKey: 'mapDashboard.productGrading',
-                checked: true,
-                status: 'completed',
-                completedAt: '31/08/2026, 05:27 (UTC)',
-                downloadable: true,
-            },
-        ],
-    },
-    { id: 'area-06', nameKey: 'mapDashboard.areas.islands', expanded: false, products: [] },
 ];
 
 const IconActivation = () => (
@@ -200,39 +129,6 @@ const RAIL_ICONS = {
     openapi: IconOpenApi,
 };
 
-const SATELLITE_META = [
-    {
-        id: 'sentinel-2',
-        sensor: 'Sentinel-2',
-        typeKey: 'mapDashboard.sensorOptical',
-        platform: 'MSI L2A',
-        resolution: '10 m',
-        revisitDays: 5,
-        sceneCount: 7,
-        color: '#2e9b4a',
-    },
-    {
-        id: 'sentinel-1',
-        sensor: 'Sentinel-1',
-        typeKey: 'mapDashboard.sensorSar',
-        platform: 'IW GRD',
-        resolution: '10 m',
-        revisitDays: 6,
-        sceneCount: 6,
-        color: '#2563eb',
-    },
-    {
-        id: 'landsat',
-        sensor: 'Landsat-8/9',
-        typeKey: 'mapDashboard.sensorOptical',
-        platform: 'OLI/TIRS',
-        resolution: '30 m',
-        revisitDays: 8,
-        sceneCount: 5,
-        color: '#d97706',
-    },
-];
-
 const formatDate = (value) => {
     if (!value) return '—';
     const [year, month, day] = String(value).split('-');
@@ -245,43 +141,6 @@ const formatShortDate = (value) => {
     const [, month, day] = String(value).split('-');
     if (!month || !day) return value;
     return `${day}/${month}`;
-};
-
-const toIsoDate = (date) =>
-    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-
-const resolveStartDate = (startDate) => {
-    const parsed = startDate ? new Date(`${startDate}T00:00:00`) : new Date();
-    return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
-};
-
-const buildTimeSeries = (startDate) => {
-    const start = resolveStartDate(startDate);
-    return SATELLITE_META.flatMap((sat) =>
-        Array.from({ length: sat.sceneCount }, (_, index) => {
-            const date = new Date(start);
-            date.setDate(start.getDate() - index * sat.revisitDays);
-            const iso = toIsoDate(date);
-            return {
-                id: `ts-${sat.id}-${iso}`,
-                satelliteId: sat.id,
-                sensor: sat.sensor,
-                platform: sat.platform,
-                resolution: sat.resolution,
-                typeKey: sat.typeKey,
-                color: sat.color,
-                date: iso,
-            };
-        })
-    ).sort((left, right) => {
-        if (left.date === right.date) {
-            return (
-                SATELLITE_META.findIndex((sat) => sat.id === left.satelliteId) -
-                SATELLITE_META.findIndex((sat) => sat.id === right.satelliteId)
-            );
-        }
-        return left.date < right.date ? 1 : -1;
-    });
 };
 
 const IconTimelinePrev = () => (
@@ -328,10 +187,10 @@ const InfoRow = ({ label, value }) => (
 
 const MapDashboard = () => {
     const { t } = useTranslation();
-    const session = useMemo(() => loadSession() || loadDraft(), []);
+    const session = useMemo(() => ensureLiveSession(), []);
     const [panelOpen, setPanelOpen] = useState(true);
     const [activeNav, setActiveNav] = useState('description');
-    const [areas, setAreas] = useState(INITIAL_AREAS);
+    const [areas, setAreas] = useState(ANALYSIS_AREAS);
     const [timeSeries] = useState(() => buildTimeSeries(session?.startDate));
     const [enabledSatellites, setEnabledSatellites] = useState(() =>
         Object.fromEntries(SATELLITE_META.map((sat) => [sat.id, true]))
@@ -477,7 +336,7 @@ const MapDashboard = () => {
 
     return (
         <div className="map-dash-page">
-            <Header />
+            <Header variant="app" />
             <div className={`map-dash${panelOpen ? ' map-dash--panel' : ''}${timeSeries.length > 0 ? ' map-dash--timeline' : ''}`}>
             <div className="map-dash-bg">
                 <OpenLayersMap
@@ -654,7 +513,9 @@ const MapDashboard = () => {
                                                     <IconChevron open={area.expanded} />
                                                 </button>
                                                 <button type="button" className="map-dash-area-name" onClick={() => toggleArea(area.id)}>
-                                                    {String(index + 1).padStart(2, '0')} {t(area.nameKey)}
+                                                    {area.kind === 'source'
+                                                        ? t(area.nameKey)
+                                                        : `${String(index + 1).padStart(2, '0')} ${t(area.nameKey)}`}
                                                 </button>
                                             </div>
 

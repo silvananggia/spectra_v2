@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../utils/i18n';
 import iconActivateWarn from '../assets/images/activation/icon-activate-warn.svg';
 import EventSnapshotMap from './EventSnapshotMap';
+import DashboardLayout from './DashboardLayout';
+import { buildSessionId, ensureLiveSession } from '../utils/activationSession';
 import './Stakeholder.scss';
 
 const FireIcon = () => (
@@ -47,6 +49,22 @@ const DISASTER_TYPES = [
     { id: 'banjir', icon: FloodIcon, theme: 'flood', category: 'Banjir', marker: '#2563eb' },
     { id: 'longsor', icon: LandslideIcon, theme: 'landslide', category: 'Longsor', marker: '#92400e' },
 ];
+
+const EVENT_CATEGORY = {
+    karhutla: 'kebakaran',
+    banjir: 'banjir',
+    kekeringan: 'kekeringan',
+    longsor: 'longsor',
+};
+
+const REGION_PROVINCE = {
+    riau: 'Riau',
+    jakarta: 'DKI Jakarta',
+    ntt: 'Nusa Tenggara Timur',
+    sumbar: 'Sumatera Barat',
+    aceh: 'Aceh',
+    kalteng: 'Kalimantan Tengah',
+};
 
 const INITIAL_EVENTS = [
     {
@@ -185,7 +203,18 @@ const Stakeholder = () => {
         }, 1800);
     };
 
-    const openEventProducts = () => {
+    const openEventProducts = (eventItem, title, summary) => {
+        const category = EVENT_CATEGORY[eventItem.type] || 'kebakaran';
+        ensureLiveSession({
+            id: buildSessionId(category, eventItem.date),
+            title,
+            category,
+            startDate: eventItem.date,
+            province: REGION_PROVINCE[eventItem.regionKey] || '',
+            description: summary,
+            startedAt: new Date().toISOString(),
+            dayCurrent: 1,
+        });
         navigate('/dashboard/map');
     };
 
@@ -194,43 +223,25 @@ const Stakeholder = () => {
     };
 
     return (
-        <main className="stakeholder-page">
-            <section className="stakeholder-hero">
-                <div className="hero-overlay" />
-                <div className="container hero-grid">
-                    <div className="hero-copy">
-                        <p className="hero-eyebrow">{t('stakeholder.eyebrow')}</p>
-                        <h1>{t('stakeholder.title')}</h1>
-                        <p className="hero-description">{t('stakeholder.description')}</p>
-                        <div className="hero-actions">
-                            <a href="#aktivitas-terkini" className="btn-primary-cta">
-                                {t('stakeholder.heroCta')}
-                            </a>
-                            <button type="button" className="btn-secondary-cta" onClick={openActivateModal}>
-                                {t('stakeholder.activate')}
-                            </button>
-                        </div>
-                    </div>
-                    <div className="hero-panel" aria-hidden="true">
-                        <div className="hero-panel-image" />
-                        <div className="hero-panel-card">
-                            <span>{t('stakeholder.heroCardLabel')}</span>
-                            <strong>{t('stakeholder.heroCardValue')}</strong>
-                        </div>
-                    </div>
+        <DashboardLayout activeNav="stakeholder">
+        <div className="stakeholder-page">
+            <section className="dash-block">
+                <div className="dash-section-title">
+                    <h1>{t('stakeholder.activityTitle')}</h1>
+                </div>
+                <div className="dash-session-banner">
+                    <p>
+                        {t('stakeholder.description')}
+                        <br />
+                        {t('stakeholder.activitySubtitle')}
+                    </p>
+                    <button type="button" className="dash-primary-btn" onClick={openActivateModal}>
+                        {t('stakeholder.activate')}
+                    </button>
                 </div>
             </section>
 
             <section id="aktivitas-terkini" className="stakeholder-activity">
-                <div className="container">
-                    <header className="activity-header">
-                        <div>
-                            <p className="section-eyebrow">{t('stakeholder.activityEyebrow')}</p>
-                            <h2>{t('stakeholder.activityTitle')}</h2>
-                            <p>{t('stakeholder.activitySubtitle')}</p>
-                        </div>
-                    </header>
-
                     <div className="activity-tabs" role="tablist" aria-label={t('stakeholder.activityTitle')}>
                         {['ongoing', 'archive'].map((filter) => (
                             <button
@@ -284,7 +295,7 @@ const Stakeholder = () => {
                                                 <button
                                                     type="button"
                                                     className="card-cta card-cta-secondary"
-                                                    onClick={openEventProducts}
+                                                    onClick={() => openEventProducts(eventItem, title, summary)}
                                                 >
                                                     {t('stakeholder.viewEvent')}
                                                 </button>
@@ -306,13 +317,6 @@ const Stakeholder = () => {
                             <p>{t(`stakeholder.empty.${activityFilter}`)}</p>
                         </div>
                     )}
-
-                    <div className="activity-activate">
-                        <button type="button" className="btn-activate btn-activate--large" onClick={openActivateModal}>
-                            {t('stakeholder.activate')}
-                        </button>
-                    </div>
-                </div>
             </section>
 
             {isActivateOpen && (
@@ -363,7 +367,8 @@ const Stakeholder = () => {
                     </div>
                 </div>
             )}
-        </main>
+        </div>
+        </DashboardLayout>
     );
 };
 

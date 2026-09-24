@@ -90,6 +90,7 @@ export const NEEDED_INFO = [
     { id: 'fieldNeeds', labelKey: 'activation.needed.fieldNeeds' },
     { id: 'fieldUpdate', labelKey: 'activation.needed.fieldUpdate' },
     { id: 'hiresImage', labelKey: 'activation.needed.hiresImage' },
+    { id: 'serviceLink', labelKey: 'activation.needed.serviceLink' },
 ];
 
 export const EMPTY_FORM = {
@@ -113,6 +114,25 @@ export const EMPTY_FORM = {
     aoiManual: false,
 };
 
+export const normalizeActivationForm = (value) => {
+    const source = value && typeof value === 'object' ? value : {};
+    const cities = Array.isArray(source.cities) && source.cities.length
+        ? source.cities.map((item) => ({
+            city: item?.city || '',
+            districts: Array.isArray(item?.districts) && item.districts.length ? item.districts : [''],
+        }))
+        : [{ city: '', districts: [''] }];
+
+    return {
+        ...EMPTY_FORM,
+        ...source,
+        title: source.title || '',
+        description: source.description || '',
+        needed: Array.isArray(source.needed) ? source.needed : [],
+        cities,
+    };
+};
+
 const readJson = (key) => {
     try {
         const raw = sessionStorage.getItem(key);
@@ -134,6 +154,39 @@ export const saveSession = (session) => {
     sessionStorage.removeItem(DRAFT_KEY);
 };
 export const clearSession = () => sessionStorage.removeItem(SESSION_KEY);
+
+export const DEFAULT_LIVE_SESSION = {
+    id: 'KHL0912',
+    title: 'Karhutla Riau 2026',
+    category: 'kebakaran',
+    startDate: '2026-09-12',
+    province: 'Riau',
+    cities: [{ city: 'Pekanbaru', districts: ['Sukajadi'] }],
+    description: 'Pemantauan hotspot dan burned area untuk mendukung operasi pemadaman di lahan gambut Riau.',
+    dayCurrent: 1,
+};
+
+export const ensureLiveSession = (incoming) => {
+    if (incoming) {
+        const session = {
+            ...incoming,
+            startedAt: incoming.startedAt || new Date().toISOString(),
+            dayCurrent: incoming.dayCurrent || 1,
+        };
+        saveSession(session);
+        return session;
+    }
+
+    const existing = loadSession();
+    if (existing) return existing;
+
+    const session = {
+        ...DEFAULT_LIVE_SESSION,
+        startedAt: new Date().toISOString(),
+    };
+    saveSession(session);
+    return session;
+};
 
 export const applyActivator = (form, activatorId) => {
     const activator = ACTIVATORS.find((item) => item.id === activatorId);

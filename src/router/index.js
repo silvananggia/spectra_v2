@@ -25,6 +25,7 @@ const ActivationDashboard = lazy(() => import('../components/ActivationDashboard
 const MapDashboard = lazy(() => import('../components/MapDashboard'));
 const Stakeholder = lazy(() => import('../components/Stakeholder'));
 const Contributor = lazy(() => import('../components/Contributor'));
+const Monitoring = lazy(() => import('../components/Monitoring'));
 
 // Loading component with skeleton
 const LoadingFallback = () => (
@@ -60,10 +61,13 @@ function MyRouter() {
     const location = useLocation();
     const isAuthPage = location.pathname === '/login' || location.pathname.startsWith('/forgot-password');
     const isDashboardPage = location.pathname === '/dashboard' || location.pathname.startsWith('/dashboard/');
+    const isStakeholderApp = location.pathname.startsWith('/stakeholder');
+    const isMonitoringPage = location.pathname === '/monitoring';
+    const hideChrome = isAuthPage || isDashboardPage || isStakeholderApp || isMonitoringPage;
 
     return (
         <>
-            {!isAuthPage && !isDashboardPage && <Header />}
+            {!hideChrome && <Header />}
             <Suspense fallback={<LoadingFallback />}>
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -82,6 +86,7 @@ function MyRouter() {
                             </RoleRoute>
                         }
                     />
+                    <Route path="/stakeholder/publish" element={<Navigate to="/dashboard/map" replace />} />
                     <Route
                         path="/contributor"
                         element={
@@ -97,12 +102,13 @@ function MyRouter() {
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/disclaimer" element={<Disclaimer />} />
+                    <Route path="/monitoring" element={<Monitoring />} />
                     <Route path="/dynamic-maps" element={<DynamicMapViewer />} />
                     <Route path="/dynamic-maps/:mapId" element={<DynamicMapViewer />} />
                     <Route path="/admin/maps" element={<MapAdmin />} />
                 </Routes>
             </Suspense>
-            {!isAuthPage && !isDashboardPage && <Footer />}
+            {!hideChrome && <Footer />}
         </>
     );
 }

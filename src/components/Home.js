@@ -121,7 +121,8 @@ const Home = () => {
         description: t(`home.slides.${tab.id}.description`),
         category: t(`home.${tab.id}`),
         theme: tab.theme,
-        to: `/products?category=${encodeURIComponent(tab.category)}`,
+        to: tab.id === 'karhutla' ? '/monitoring' : `/products?category=${encodeURIComponent(tab.category)}`,
+        cta: tab.id === 'karhutla' ? t('home.ongoingCta') : t('home.viewProducts'),
     }));
 
     useEffect(() => {
@@ -189,7 +190,7 @@ const Home = () => {
                             <h1 className="slide-title">{slide.title}</h1>
                             <p className="slide-description">{slide.description}</p>
                             <Link to={slide.to} className="slide-cta">
-                                {t('home.viewProducts')}
+                                {slide.cta}
                             </Link>
                         </div>
                     </article>
@@ -299,7 +300,7 @@ const Home = () => {
                                         <button
                                             type="button"
                                             className="home-ongoing-cta"
-                                            onClick={() => navigate('/dashboard/map')}
+                                            onClick={() => navigate(eventItem.type === 'karhutla' ? '/monitoring' : '/dashboard/map')}
                                         >
                                             {t('home.ongoingCta')}
                                         </button>
@@ -388,9 +389,13 @@ const Home = () => {
                             <button
                                 type="button"
                                 className="panel-cta"
-                                onClick={() => navigate(`/products?category=${encodeURIComponent(activeDisaster.category)}`)}
+                                onClick={() => navigate(
+                                    activeDisaster.id === 'karhutla'
+                                        ? '/monitoring'
+                                        : `/products?category=${encodeURIComponent(activeDisaster.category)}`
+                                )}
                             >
-                                {t('home.viewProducts')}
+                                {activeDisaster.id === 'karhutla' ? t('home.ongoingCta') : t('home.viewProducts')}
                             </button>
                         </div>
                     </div>

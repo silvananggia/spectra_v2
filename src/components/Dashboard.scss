@@ -3,10 +3,17 @@
 
 .dashboard-page {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
     background: $white;
     color: #262626;
     font-family: 'Inter', sans-serif;
+}
+
+.dashboard-shell {
+    display: flex;
+    flex: 1;
+    min-height: 0;
 }
 
 .sr-only {
@@ -68,9 +75,11 @@
     flex-direction: column;
     width: 301px;
     flex-shrink: 0;
-    height: 100dvh;
+    height: auto;
+    align-self: stretch;
     position: sticky;
     top: 0;
+    max-height: 100dvh;
     overflow-y: auto;
     overflow-x: hidden;
     border-right: 1px solid #e7e7e7;
@@ -721,13 +730,14 @@
 }
 
 @media (max-width: 900px) {
-    .dashboard-page {
+    .dashboard-shell {
         flex-direction: column;
     }
 
     .dash-sidebar {
         width: 100%;
         height: auto;
+        max-height: none;
         position: static;
         border-right: 0;
         border-bottom: 1px solid #e7e7e7;

@@ -158,6 +158,15 @@ const FileGlyph = () => (
     </svg>
 );
 
+const isValidServiceUrl = (value) => {
+    try {
+        const url = new URL(value.trim());
+        return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (error) {
+        return false;
+    }
+};
+
 const Contributor = () => {
     const navigate = useNavigate();
     const { t, currentLanguage } = useTranslation();
@@ -166,6 +175,7 @@ const Contributor = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [contributionType, setContributionType] = useState(DEFAULT_NEEDED);
     const [notes, setNotes] = useState('');
+    const [serviceUrl, setServiceUrl] = useState('');
     const [files, setFiles] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [uploadError, setUploadError] = useState('');
@@ -225,12 +235,14 @@ const Contributor = () => {
         setSelectedEvent(eventItem);
         setContributionType(DEFAULT_NEEDED);
         setNotes('');
+        setServiceUrl('');
         resetUpload();
     };
 
     const closeContribute = () => {
         setSelectedEvent(null);
         setNotes('');
+        setServiceUrl('');
         resetUpload();
     };
 
@@ -304,8 +316,12 @@ const Contributor = () => {
     };
 
     const needsFiles = contributionType === 'fieldPhoto' || contributionType === 'hiresImage';
+    const isServiceLink = contributionType === 'serviceLink';
+    const serviceUrlValid = isValidServiceUrl(serviceUrl);
     const canSubmit = Boolean(selectedEvent) && (
-        needsFiles ? files.length > 0 : (notes.trim().length > 0 || files.length > 0)
+        isServiceLink
+            ? serviceUrlValid
+            : needsFiles ? files.length > 0 : (notes.trim().length > 0 || files.length > 0)
     );
 
     const handleContribute = (event) => {
@@ -472,6 +488,8 @@ const Contributor = () => {
                                                 onChange={() => {
                                                     setContributionType(item.id);
                                                     setUploadError('');
+                                                    setServiceUrl('');
+                                                    if (item.id === 'serviceLink') resetUpload();
                                                 }}
                                             />
                                             <span>{t(item.labelKey)}</span>
@@ -480,66 +498,85 @@ const Contributor = () => {
                                 </div>
                             </fieldset>
 
-                            <div className="contribute-upload">
-                                <span className="contribute-upload-label">{t('contributor.form.upload')}</span>
-                                <div
-                                    className={`contribute-dropzone${isDragging ? ' is-dragging' : ''}`}
-                                    onDragEnter={handleDragEnter}
-                                    onDragOver={handleDragOver}
-                                    onDragLeave={handleDragLeave}
-                                    onDrop={handleDrop}
-                                >
+                            {isServiceLink ? (
+                                <label className="full-width">
+                                    <span>{t('contributor.form.serviceUrl')}</span>
+                                    <small className="contribute-field-hint">{t('contributor.form.serviceUrlHint')}</small>
                                     <input
-                                        id="contribute-files"
-                                        ref={fileInputRef}
-                                        type="file"
-                                        multiple
-                                        accept={ACCEPT_BY_TYPE[contributionType]}
-                                        className="contribute-dropzone-input"
-                                        aria-label={t('contributor.form.upload')}
-                                        onChange={(event) => {
-                                            addFiles(event.target.files);
-                                            event.target.value = '';
-                                        }}
+                                        type="url"
+                                        name="serviceUrl"
+                                        inputMode="url"
+                                        autoComplete="url"
+                                        value={serviceUrl}
+                                        onChange={(event) => setServiceUrl(event.target.value)}
+                                        placeholder={t('contributor.form.serviceUrlPlaceholder')}
                                     />
-                                    <label htmlFor="contribute-files" className="contribute-dropzone-label">
-                                        <span className="contribute-dropzone-icon">
-                                            <UploadIcon />
-                                        </span>
-                                        <strong>{t('contributor.form.uploadHint')}</strong>
-                                        <span>{t(`contributor.form.uploadTypes.${contributionType}`)}</span>
-                                        <em>{t('contributor.form.uploadMax')}</em>
-                                    </label>
+                                    {serviceUrl.trim() && !serviceUrlValid ? (
+                                        <p className="contribute-upload-error">{t('contributor.form.serviceUrlInvalid')}</p>
+                                    ) : null}
+                                </label>
+                            ) : (
+                                <div className="contribute-upload">
+                                    <span className="contribute-upload-label">{t('contributor.form.upload')}</span>
+                                    <div
+                                        className={`contribute-dropzone${isDragging ? ' is-dragging' : ''}`}
+                                        onDragEnter={handleDragEnter}
+                                        onDragOver={handleDragOver}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={handleDrop}
+                                    >
+                                        <input
+                                            id="contribute-files"
+                                            ref={fileInputRef}
+                                            type="file"
+                                            multiple
+                                            accept={ACCEPT_BY_TYPE[contributionType]}
+                                            className="contribute-dropzone-input"
+                                            aria-label={t('contributor.form.upload')}
+                                            onChange={(event) => {
+                                                addFiles(event.target.files);
+                                                event.target.value = '';
+                                            }}
+                                        />
+                                        <label htmlFor="contribute-files" className="contribute-dropzone-label">
+                                            <span className="contribute-dropzone-icon">
+                                                <UploadIcon />
+                                            </span>
+                                            <strong>{t('contributor.form.uploadHint')}</strong>
+                                            <span>{t(`contributor.form.uploadTypes.${contributionType}`)}</span>
+                                            <em>{t('contributor.form.uploadMax')}</em>
+                                        </label>
+                                    </div>
+                                    {uploadError ? <p className="contribute-upload-error">{uploadError}</p> : null}
+                                    {files.length > 0 ? (
+                                        <ul className="contribute-files">
+                                            {files.map((item) => (
+                                                <li key={item.id} className="contribute-file">
+                                                    {item.preview ? (
+                                                        <img src={item.preview} alt="" className="contribute-file-thumb" />
+                                                    ) : (
+                                                        <span className="contribute-file-glyph">
+                                                            <FileGlyph />
+                                                        </span>
+                                                    )}
+                                                    <div className="contribute-file-meta">
+                                                        <strong>{item.file.name}</strong>
+                                                        <span>{formatFileSize(item.file.size)}</span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        className="contribute-file-remove"
+                                                        onClick={() => removeFile(item.id)}
+                                                        aria-label={`${t('contributor.form.removeFile')} ${item.file.name}`}
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : null}
                                 </div>
-                                {uploadError ? <p className="contribute-upload-error">{uploadError}</p> : null}
-                                {files.length > 0 ? (
-                                    <ul className="contribute-files">
-                                        {files.map((item) => (
-                                            <li key={item.id} className="contribute-file">
-                                                {item.preview ? (
-                                                    <img src={item.preview} alt="" className="contribute-file-thumb" />
-                                                ) : (
-                                                    <span className="contribute-file-glyph">
-                                                        <FileGlyph />
-                                                    </span>
-                                                )}
-                                                <div className="contribute-file-meta">
-                                                    <strong>{item.file.name}</strong>
-                                                    <span>{formatFileSize(item.file.size)}</span>
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    className="contribute-file-remove"
-                                                    onClick={() => removeFile(item.id)}
-                                                    aria-label={`${t('contributor.form.removeFile')} ${item.file.name}`}
-                                                >
-                                                    ×
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : null}
-                            </div>
+                            )}
 
                             <label className="full-width">
                                 <span>{t('contributor.form.notes')}</span>
